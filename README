@@ -1,0 +1,23 @@
+//**********************************
+//*** jQuery
+//*** Plugin: validateForm v1.0
+//*** Author: Petar Slavnic
+//*** Email: petarslavnic@gmail.com
+//**********************************
+
+Usage:
+<script>
+	$(document).ready(function() {
+		$("form").submit(function() {
+			var result = $(this).validateForm(); //return true or false
+			return result;
+		});
+	});
+</script>
+
+<form action="#" method="post">
+	<input type="text" name="email" id="email" value="" rules="required|valid_email" />
+	<input type="password" name="password" id="password" value="" rules="required" />
+	<input type="password" name="repassword" id="repassword" value="" rules="required|matches[password]" /> <!-- Match object name!!! -->
+	<input type="submit" value="Submit" />
+</form>
