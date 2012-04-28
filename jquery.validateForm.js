@@ -1,8 +1,9 @@
-//************************
-//***   Validate Form v1.1
-//***   Author: Petar Slavnic
-//***   
-//************************
+/**
+ *   jQuery validateForm plugin v1.1
+ *   Author: Petar Slavnic
+ *   Email: petarslavnic@gmail.com
+ *   License: GPLv3
+ */
 
 (function( $ ){
 	

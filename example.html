@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>jquery.validateForm 1.1 demo</title>
+        <script type="text/javascript" language="javascript" src="jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" language="javascript" src="jquery.validateForm.js"></script>
+        <script type="text/javascript" language="javascript">
+            $(document).ready(function() {
+                $('#frmTest').validateForm({
+                    before: function() {
+                        $('.msg').html("");
+                        alert("Are you sure you want to submit the form?");
+                    },
+                    success: function(e) {
+                        e.preventDefault();
+                        alert('Form has been successfully submitted.');
+                    },
+                    error: function(errObjects) {
+                        $.each(errObjects, function() {
+                            $(this).css('border', '1px solid #F00');
+                            var $message = "";
+                            $.each(this.messages, function(index, value) {
+                                $message += value + "<br />";
+                            });
+                            $(this).next().html($message);
+                        });
+                        alert('Some of the fields are improperly filled.');
+                    },
+                    events: {
+                        keyup: function() {
+                            //alert('hello');
+                            $(this).css('border', '1px solid #000');
+                        },
+                        change: function() {
+                            //alert('hello');
+                            $(this).css('border', '1px solid #000');
+                        }
+                    },
+                    messages: {
+                        required: "This field is required!",
+                        min_length: "Field must be min 5 caracters long!",
+                        max_length: "Field must be max 12 caracters long!",
+                        matches:  "Field must match other field!",
+                        valid_email: "Email must be valid address!"
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <form action="#" name="frmTest" id="frmTest" method="post">
+            <table celpadding="5" cellspacing="0" border="0" width="800">
+                <tr>
+                    <td valign="top">Name</td>
+                    <td valign="top">
+                        <input type="text" name="name" id="name" value="" style="border: 1px solid #000;" rules="required" />&nbsp;(required)
+                        <div class="msg"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">Password</td>
+                    <td valign="top">
+                        <input type="password" name="password" id="password" value="" style="border: 1px solid #000;" rules="required|min_length[5]|max_length[12]|alpha_numeric" />&nbsp;(required|min_length[5]|max_length[12]|alpha_numeric)
+                        <div class="msg"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">RePassword</td>
+                    <td valign="top">
+                        <input type="password" name="repassword" id="repassword" value="" style="border: 1px solid #000;" rules="required|min_length[5]|max_length[12]|alpha_numeric|matches[password]" />&nbsp;(required|min_length[5]|max_length[12]|alpha_numeric|matches[password])
+                        <div class="msg"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">Email</td>
+                    <td valign="top">
+                        <input type="text" name="email" id="email" value="" style="border: 1px solid #000;" rules="valid_email" />&nbsp;(valid_email)
+                        <div class="msg"></div>
+                    </td>
+                </tr>
+            </table>
+            <div><input type="submit" value="Submit Form" /></div>
+        </form>
+    </body>
+</html>

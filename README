@@ -1,23 +1,50 @@
-//**********************************
-//*** jQuery
-//*** Plugin: validateForm v1.0
-//*** Author: Petar Slavnic
-//*** Email: petarslavnic@gmail.com
-//**********************************
+Plugin: validateForm v1.1
+jQuery:  > 1.6.x
+License: GPL
 
-Usage:
-<script>
-	$(document).ready(function() {
-		$("form").submit(function() {
-			var result = $(this).validateForm(); //return true or false
-			return result;
-		});
-	});
-</script>
+Instalation:
+First of all you need include jQuery framework in your header.
+Next include file validateForm.js in header afther jQuery.
+This plugin finds all the fields that have the tag "rules" and checks them.
+EXAMPLE:
+<input type="password" name="repassword" id="repassword" value="" rules="required|min_length[5]|max_length[12]|alpha_numeric|matches[password]" />
 
-<form action="#" method="post">
-	<input type="text" name="email" id="email" value="" rules="required|valid_email" />
-	<input type="password" name="password" id="password" value="" rules="required" />
-	<input type="password" name="repassword" id="repassword" value="" rules="required|matches[password]" /> <!-- Match object name!!! -->
-	<input type="submit" value="Submit" />
-</form>
+That is all...
+
+For demo form, see example.html
+
+Validation methods:
+	- required
+	- matches[field_name]
+	- valid_email
+	- min_length[number] (min_length[5])
+	- max_length[number] (max_length[12])
+	- valid_phone
+	- valid_url
+	- integer
+	- exact_length[number] (exact_length[6])
+	- alpha
+	- alpha_numeric
+	- alpha_dash
+	- numeric
+	- decimal
+	- is_natural
+	- is_natural_no_zero
+	- valid_base64
+	
+You can set error message for all methods:
+	messages: {
+		required: "This field is required!",
+		min_length: "Field must be min 5 caracters long!"
+	}
+	
+Set events for fields with errors:
+	events: {
+		keyup: function() {
+			$(this).css('border', '1px solid #000');
+		},
+		change: function() {
+			$(this).css('border', '1px solid #000');
+		}
+	},
+
