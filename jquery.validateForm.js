@@ -2,13 +2,33 @@
  *   jQuery validateForm plugin v1.1
  *   Author: Petar Slavnic
  *   Email: petarslavnic@gmail.com
- *   License: GPLv3
+ *   License: GPL
  */
 
 (function( $ ){
 	
     var methods = {
         init : function( options ) { 
+            //*** Default error messages
+            var messages = $.extend({
+                required: "The {0} field is required.",
+                matches:  "The {0} field does not match the {1} field.",
+                valid_email: "The {0} field must contain a valid email address.",
+                min_length: "The {0} field must be at least {1} characters in length.",
+                max_length: "The {0} field can not exceed {1} characters in length.",
+                valid_phone: "The {0} field must contain a valid phone number.",
+                valid_url: "The {0} field must contain a valid URL.",
+                integer: "The {0} field must contain an integer.",
+                exact_length: "The {0} field must be exactly {1} characters in length.",
+                alpha: "The {0} field may only contain alphabetical characters.",
+                alpha_numeric: "The {0} field may only contain alpha-numeric characters.",
+                alpha_dash: "The {0} field may only contain alpha-numeric characters, underscores, and dashes.",
+                numeric: "The {0} field must contain only numbers.",
+                decimal: "The {0} field must contain a decimal number.",
+                is_natural: "The {0} field must contain only positive numbers.",
+                is_natural_no_zero: "The {0} field must contain a number greater than zero.",
+                valid_base64: "The {0} field must contain valid base64."
+            }, options.messages);
             //*** Each object
             this.each(function() {
                 var $form = $(this);
@@ -62,7 +82,11 @@
                             if ($required || $field.val() !== "") {
                                 // Call rule method
                                 if (methods[$rule]($field.val(), $param, $form) === false) {
-                                    if (typeof options.messages[$rule] !== 'undefined') $obj.messages.push(options.messages[$rule]);
+                                    if (typeof messages[$rule] !== 'undefined') {
+                                        var tmpmsg = messages[$rule];
+                                        tmpmsg = tmpmsg.format($field.attr('name'), $param);
+                                        $obj.messages.push(tmpmsg);
+                                    }
                                     errObjects.push($obj);
                                     $status = false;
                                 }
@@ -160,4 +184,13 @@
         }    
   
     };
+    
+    String.prototype.format = function() {
+        var formatted = this;
+        for(arg in arguments) {
+            formatted = formatted.replace("{" + arg + "}", arguments[arg]);
+        }
+        return formatted;
+    };
+
 })( jQuery );
