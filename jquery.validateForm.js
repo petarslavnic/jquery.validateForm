@@ -100,7 +100,7 @@
                     //*** Return Final Result
                     if ($status === true) {
                         //*** If is set, call success method
-                        if (typeof options.success !== 'undefined') return options.success(e);
+                        if (typeof options.success !== 'undefined') return options.success(e, $form);
                     } else {
                         //*** Prevent form to submit
                         e.preventDefault();
