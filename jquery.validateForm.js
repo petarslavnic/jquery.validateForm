@@ -60,38 +60,41 @@
                         var $obj = this;
                         //*** Set field in variable
                         var $field = $(this);
-                        //*** Get all field rules
-                        var $rules = $field.attr('rules').split("|");
-                        //*** Check if field is required
-                        var $required = ($.inArray('required', $rules) > -1) ? true : false;
-                        //*** Set object messages
-                        $obj.messages = new Array();
-                        //*** Apply each rule on field
-                        $.each($rules, function(index, $rule) {
-                            //*** Set rule parameter
-                            var $param = false;
-                            //*** Extract rule parameter
-                            var $match = $rule.match(/(.*?)\[(.*)\]/);
-                            if ($match) {
-                                //*** Set rule name
-                                $rule = $match[1];
-                                //*** Set parameter value
-                                $param = $match[2];
-                            }
-                            //*** If field is not empty and
-                            if ($required || $field.val() !== "") {
-                                // Call rule method
-                                if (methods[$rule]($field.val(), $param, $form) === false) {
-                                    if (typeof messages[$rule] !== 'undefined') {
-                                        var tmpmsg = messages[$rule];
-                                        tmpmsg = tmpmsg.format($field.attr('name'), $param);
-                                        $obj.messages.push(tmpmsg);
-                                    }
-                                    errObjects.push($obj);
-                                    $status = false;
+                        //*** Check if field is not disabled
+                        if (!$field.is(':disabled')) {
+                            //*** Get all field rules
+                            var $rules = $field.attr('rules').split("|");
+                            //*** Check if field is required
+                            var $required = ($.inArray('required', $rules) > -1) ? true : false;
+                            //*** Set object messages
+                            $obj.messages = new Array();
+                            //*** Apply each rule on field
+                            $.each($rules, function(index, $rule) {
+                                //*** Set rule parameter
+                                var $param = false;
+                                //*** Extract rule parameter
+                                var $match = $rule.match(/(.*?)\[(.*)\]/);
+                                if ($match) {
+                                    //*** Set rule name
+                                    $rule = $match[1];
+                                    //*** Set parameter value
+                                    $param = $match[2];
                                 }
-                            }
-                        });
+                                //*** If field is not empty and
+                                if ($required || $field.val() !== "") {
+                                    // Call rule method
+                                    if (methods[$rule]($field.val(), $param, $form) === false) {
+                                        if (typeof messages[$rule] !== 'undefined') {
+                                            var tmpmsg = messages[$rule];
+                                            tmpmsg = tmpmsg.format($field.attr('name'), $param);
+                                            $obj.messages.push(tmpmsg);
+                                        }
+                                        errObjects.push($obj);
+                                        $status = false;
+                                    }
+                                }
+                            });
+                        }
                     });	
 					
                     //*** If is set, call complete method
