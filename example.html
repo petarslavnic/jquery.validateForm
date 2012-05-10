@@ -28,21 +28,17 @@
                         alert('Some of the fields are improperly filled.');
                     },
                     events: {
-                        keyup: function() {
-                            //alert('hello');
-                            $(this).css('border', '1px solid #000');
-                        },
-                        change: function() {
+                        "keyup change": function() {
                             //alert('hello');
                             $(this).css('border', '1px solid #000');
                         }
                     },
                     messages: {
-                        required: "This field is required!",
-                        min_length: "Field must be min 5 caracters long!",
-                        max_length: "Field must be max 12 caracters long!",
-                        matches:  "Field must match other field!",
-                        valid_email: "Email must be valid address!"
+                        required: "Field is required!",
+                        min_length: "Min 5 caracters long!",
+                        max_length: "Max 12 caracters long!",
+                        matches:  "Must match Password field!",
+                        valid_email: "Must be valid email!"
                     }
                 });
             });
@@ -50,7 +46,7 @@
     </head>
     <body>
         <form action="#" name="frmTest" id="frmTest" method="post">
-            <table celpadding="5" cellspacing="0" border="0" width="800">
+            <table cellpadding="5" cellspacing="0" border="0" width="800">
                 <tr>
                     <td valign="top">Name</td>
                     <td valign="top">

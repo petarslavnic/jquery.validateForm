@@ -9,8 +9,72 @@
 	
     var methods = {
         init : function( options ) { 
+			//*** Default rules
+			options.rules = $.extend({
+				required : function( $str ) {
+					return (! /\S/.test($str)) ? false : true;
+				},
+				matches : function( $str, $val, $form ) {
+					var $match_field = $('[name='+$val+']', $form);
+					if (typeof $match_field === 'undefined') return false;
+					return ($str !== $match_field.val()) ? false : true;
+				},
+				valid_email : function( $str ) {
+					return (! /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/.test($str)) ? false : true;
+				},
+				min_length : function( $str, $val ) {
+					if ($val.match(/[^0-9]/)) return false;
+					return ($str.length < $val) ? false : true;
+				},
+				max_length : function( $str, $val ) {
+					if ($val.match(/[^0-9]/)) return false;
+					return ($str.length > $val) ? false : true;
+				},
+				valid_phone : function( $str ) {
+					return (! /^\+(?:[0-9] ?){6,14}[0-9]$/.test($str)) ? false : true;
+				},
+				valid_url : function( $str ) {
+					return (! /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/.test($str)) ? false : true;
+				},
+				integer : function( $str ) {
+					/* /^[\-+]?[0-9]+$/ */
+					return (! /^\d+$/.test($str)) ? false : true;
+				},
+				exact_length : function( $str, $val ) {
+					if ($val.match(/[^0-9]/)) return false;
+					return ($str.length != $val) ? false : true;
+				},
+				alpha : function( $str ) {
+					return (! /^([a-z])+$/i.test($str)) ? false : true;
+				},
+				alpha_numeric : function( $str ) {
+					return (! /^([a-z0-9])+$/i.test($str)) ? false : true;
+				},
+				alpha_dash : function( $str ) {
+					return (! /^([-a-z0-9_-])+$/i.test($str)) ? false : true;
+				},
+				numeric : function( $str ) {
+					return (! /^[\-+]?[0-9]*\.?[0-9]+$/.test($str)) ? false : true;
+				},
+				decimal : function( $str ) {
+					return (! /^[\-+]?[0-9]+\.[0-9]+$/.test($str)) ? false : true;
+				},
+				is_natural : function( $str ) {
+					return (! /^[0-9]+$/.test($str)) ? false : true;
+				},
+				is_natural_no_zero : function( $str ) {
+					var $regex = /^[0-9]+$/;
+					if (!$regex.test($str)) return false;
+					if ($str == 0) return false;
+					return true;
+				},
+				valid_base64 : function( $str ) {
+					return (! /[^a-zA-Z0-9\/\+=]/.test($str)) ? false : true;
+				}
+			}, options.rules);
+			
             //*** Default error messages
-            var messages = $.extend({
+            options.messages = $.extend({
                 required: "The {0} field is required.",
                 matches:  "The {0} field does not match the {1} field.",
                 valid_email: "The {0} field must contain a valid email address.",
@@ -29,6 +93,7 @@
                 is_natural_no_zero: "The {0} field must contain a number greater than zero.",
                 valid_base64: "The {0} field must contain valid base64."
             }, options.messages);
+			
             //*** Each object
             this.each(function() {
                 var $form = $(this);
@@ -83,9 +148,9 @@
                                 //*** If field is not empty and
                                 if ($required || $field.val() !== "") {
                                     // Call rule method
-                                    if (methods[$rule]($field.val(), $param, $form) === false) {
-                                        if (typeof messages[$rule] !== 'undefined') {
-                                            var tmpmsg = messages[$rule];
+                                    if (options.rules[$rule]($field.val(), $param, $form) === false) {
+                                        if (typeof options.messages[$rule] !== 'undefined') {
+                                            var tmpmsg = options.messages[$rule];
                                             tmpmsg = tmpmsg.format($field.attr('name'), $param);
                                             $obj.messages.push(tmpmsg);
                                         }
@@ -112,66 +177,6 @@
                     }
                 });
             });
-        },
-        required : function( $str ) {
-            return (! /\S/.test($str)) ? false : true;
-        },
-        matches : function( $str, $val, $form ) {
-            var $match_field = $('[name='+$val+']', $form);
-            if (typeof $match_field === 'undefined') return false;
-            return ($str !== $match_field.val()) ? false : true;
-        },
-        valid_email : function( $str ) {
-            return (! /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/.test($str)) ? false : true;
-        },
-        min_length : function( $str, $val ) {
-            if ($val.match(/[^0-9]/)) return false;
-            return ($str.length < $val) ? false : true;
-        },
-        max_length : function( $str, $val ) {
-            if ($val.match(/[^0-9]/)) return false;
-            return ($str.length > $val) ? false : true;
-        },
-        valid_phone : function( $str ) {
-            return (! /^\+(?:[0-9] ?){6,14}[0-9]$/.test($str)) ? false : true;
-        },
-        valid_url : function( $str ) {
-            return (! /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/.test($str)) ? false : true;
-        },
-        integer : function( $str ) {
-            /* /^[\-+]?[0-9]+$/ */
-            return (! /^\d+$/.test($str)) ? false : true;
-        },
-        exact_length : function( $str, $val ) {
-            if ($val.match(/[^0-9]/)) return false;
-            return ($str.length != $val) ? false : true;
-        },
-        alpha : function( $str ) {
-            return (! /^([a-z])+$/i.test($str)) ? false : true;
-        },
-        alpha_numeric : function( $str ) {
-            return (! /^([a-z0-9])+$/i.test($str)) ? false : true;
-        },
-        alpha_dash : function( $str ) {
-            return (! /^([-a-z0-9_-])+$/i.test($str)) ? false : true;
-        },
-        numeric : function( $str ) {
-            return (! /^[\-+]?[0-9]*\.?[0-9]+$/.test($str)) ? false : true;
-        },
-        decimal : function( $str ) {
-            return (! /^[\-+]?[0-9]+\.[0-9]+$/.test($str)) ? false : true;
-        },
-        is_natural : function( $str ) {
-            return (! /^[0-9]+$/.test($str)) ? false : true;
-        },
-        is_natural_no_zero : function( $str ) {
-            var $regex = /^[0-9]+$/;
-            if (!$regex.test($str)) return false;
-            if ($str == 0) return false;
-            return true;
-        },
-        valid_base64 : function( $str ) {
-            return (! /[^a-zA-Z0-9\/\+=]/.test($str)) ? false : true;
         }
     };
 
