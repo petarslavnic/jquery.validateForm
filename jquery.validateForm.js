@@ -176,7 +176,7 @@
                         if (typeof options.error !== 'undefined') return options.error(errObjects);
                     }
                 });
-            });
+			});
         }
     };
 
