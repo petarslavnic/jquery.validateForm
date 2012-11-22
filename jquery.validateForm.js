@@ -145,16 +145,19 @@
                                     //*** Set parameter value
                                     $param = $match[2];
                                 }
-								// Call rule method
-								if (options.rules[$rule]($field.val(), $param, $form) === false) {
-									if (typeof options.messages[$rule] !== 'undefined') {
-										var tmpmsg = options.messages[$rule];
-										tmpmsg = tmpmsg.format($field.attr('name'), $param);
-										$obj.messages.push(tmpmsg);
-									}
-									errObjects.push($obj);
-									$status = false;
-								}
+                                //*** If field is not empty and
+                                //if ($required || $field.val() !== "" || ($rule == 'matches' && $('[name='+$param+']', $form).val() !== $field.val())) {
+                                    // Call rule method
+                                    if (options.rules[$rule]($field.val(), $param, $form) === false) {
+                                        if (typeof options.messages[$rule] !== 'undefined') {
+                                            var tmpmsg = options.messages[$rule];
+                                            tmpmsg = tmpmsg.format($field.attr('name'), $param);
+                                            $obj.messages.push(tmpmsg);
+                                        }
+                                        errObjects.push($obj);
+                                        $status = false;
+                                    }
+                                //}
                             });
                         }
                     });	
